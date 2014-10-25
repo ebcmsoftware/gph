@@ -8,6 +8,7 @@ import urllib2
 import logging
 import webapp2
 import datetime
+import schedule
 
 #from datetime import datetime
 from google.appengine.ext import ndb
@@ -42,7 +43,7 @@ class User(ndb.Model):
   text_editor = ndb.StringProperty(default='')
   year = ndb.IntegerProperty(default=0) # 0 = freshman, ..., 4 = grad student
   sleep_hours = ndb.StringProperty(default='')
-  busy_times = ndb.StringProperty(default='')
+  busy_times = ndb.StringProperty(repeated=True)
 
   @classmethod
   def query_users(self, email):
@@ -85,9 +86,19 @@ class Matchmake(webapp2.RequestHandler):
     # send emails to erryone based on heuristic maximum funciton
     # if odd number, :(
     users = User.all_users()
+    s = schedule.Schedule()
     for user in users:
-        self.response.out.write(user)
-        self.response.out.write(user.email)
+        for interval in user.busy_times:
+            try:
+                [a, b] = json.loads(interval)
+                self.response.out.write([a, b])
+            except:
+                logging.debug('no')
+            #[start, end] = json.loads(interval)
+        #l = json.loads(busy_list)
+        #self.response.out.write(l)
+        continue
+
 
     def findFreeTimesAmongstBusy(self, timePeriods, startTime, endTime):
         startTimes=[startTime]
@@ -113,12 +124,28 @@ class Matchmake(webapp2.RequestHandler):
         return freeTimes
 
   def post(self):
+    def to_utc(d):
+        import calendar
+        return calendar.timegm(d.timetuple())
     # send emails to erryone based on heuristic maximum funciton
     # if odd number, :(
     users = User.all_users()
-    s = Schedule()
+    s = schedule.Schedule()
     for user in users:
-        add_student(user.email, user.busy_times, preferences={}, time_weights=[])
+        busy_list = user.busy_times
+        interval_list = []
+        for interval in busy_list:
+            fmt_str = "%Y-%m-%dT%H:%M:%S"; 
+            try:
+                i = json.loads(interval)
+                (a, b) = (datetime.datetime.strptime(i[0], fmt_str), 
+                          datetime.datetime.strptime(i[1], fmt_str))
+            except (IndexError, ValueError):
+                continue
+            interval_list.append([to_utc(a),to_utc(b)])
+        if interval_list != []:
+            s.add_student(user.email, interval_list, preferences={}, time_weights=[])
+            logging.info(interval_list)
     pairs = schedule.pair_students(s)
     for (email1, email2) in pairs:
         user_query = User.query_users(email=email_key(email2))
@@ -139,9 +166,7 @@ class CreateProject(webapp2.RequestHandler):
         return datetime.datetime.strptime(time, "%Y-%m-%d %H:%M")
     start = self.request.get('startdate')
     end = self.request.get('enddate')
-    logging.info(start)
     start_time = parse(start)
-    logging.info(start_time)
     end_time = parse(end)
     projects = Project.all_projects()
     response = projects.fetch(1)
@@ -161,6 +186,14 @@ class CreateProject(webapp2.RequestHandler):
     }
     self.response.out.write(template.render(path, template_values))
 
+    
+class Success(webapp2.RequestHandler):
+  def get(self):
+    path = os.path.join(os.path.dirname(__file__), 'success.html')
+    template_values = {
+    }
+    self.response.out.write(template.render(path, template_values))
+
 
 class Callback(webapp2.RequestHandler):
   def get(self):
@@ -172,7 +205,6 @@ window.location.href = 'http://group-40.appspot.com/getbusytimes?token='+token+'
 </script>
     ''')
 
-    logging.info(self.request.get('access_token'))
     self.response.out.write(self.request.get('access_token'))
     return
 
@@ -199,6 +231,7 @@ class GetBusyTimes(webapp2.RequestHandler):
 
     projects = Project.all_projects()
     response = projects.fetch(1)
+
     project = response[0]
     project.put()
 
@@ -211,12 +244,11 @@ class GetBusyTimes(webapp2.RequestHandler):
         'timeMax' : jsonTime(project.end),
         'items' : calendarIds,
     }
-    #logging.info(values)
     interval_list = [] # list of tuples - (start, end)
     def parse(time):
         time = time.rsplit('-', 1)[0]
         try:
-            return datetime.datetime.strptime(time, "%Y-%m-%dT%H:%M:%S")
+            return time 
         except ValueError:
             pass
     for cal_id in calendarIds:
@@ -230,15 +262,29 @@ class GetBusyTimes(webapp2.RequestHandler):
         for item in items:
             try:
                 (a, b) = (item['start']['dateTime'], item['end']['dateTime'])
-                interval_list.append([parse(a), parse(b)])
+                a = parse(a)
+                b = parse(b)
+                if a and b and a != '' and b != '':
+                    interval = json.dumps([a, b]) 
+                    interval_list.append(interval)
             except KeyError:
                 pass
-    string_intervals = json.dumps(interval_list)
     user_query = User.query_users(email=email_key(email))
     response = user_query.fetch(1)
     user = response[0]
-    user.busy_times = string_intervals
+    user.busy_times = interval_list
     user.put()
+    self.redirect('/success')
+
+
+class Prefs(webapp2.RequestHandler):
+  def get(self):
+    # pair people with other people
+    path = os.path.join(os.path.dirname(__file__), 'prefs.html')
+    template_values = {
+    }
+    self.response.out.write(template.render(path, template_values))
+    return
 
 
 class MainHandler(webapp2.RequestHandler):
@@ -259,6 +305,7 @@ class AddUser(webapp2.RequestHandler):
         (x, site) = email.split('@')
         machine = site.split('.')[1]
     except IndexError:
+        self.redirect('/')
         return
     user_query = User.query_users(email=email_key(email))
     response = user_query.fetch(1)
@@ -276,7 +323,9 @@ app = webapp2.WSGIApplication([
     ('/oauth2callback', Callback),
     ('/getproject', GetProject),
     ('/createproject', CreateProject),
+    ('/success', Success),
     ('/adduser', AddUser),
+    ('/prefs', Prefs),
     ('/', MainHandler)
 ], debug=True)
 
