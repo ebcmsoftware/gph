@@ -9,3 +9,7 @@ body {
 	height: 50%;
 	margin: 10% auto;
 }
+
+.input {
+	font-family: 'Roboto Condensed', sans-serif;
+}
