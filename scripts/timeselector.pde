@@ -9,6 +9,7 @@ var httpGet=function(theUrl)
     xmlHttp = new XMLHttpRequest();
     xmlHttp.open( "GET", theUrl, false );
     xmlHttp.send( null );
+    console.log(xmlHttp.responseText);
     return xmlHttp.responseText;
 };
 var dayNames=["Su","M","T","W","Th","F","S"];
@@ -73,7 +74,8 @@ void setup(){
   times=new ArrayList<Time>();
   freeTimes=new ArrayList<Integer>();
   printMessage("");
-  String[] s=split(httpGet("http://group-40.appspot.com/getproject"), " ");
+  String[] s=split(httpGet("http://group-40.appspot.com/getproject"), "\n");
+  console.log(s[0],s[1]);
   days=parseInt(s[2]);
   startTime=parseInt(s[0])*1000;
   generateDateDivs(startTime, days);
