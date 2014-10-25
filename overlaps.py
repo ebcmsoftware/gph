@@ -1,5 +1,15 @@
 from intervaltree import *
 
+""" The most important function exported from this module is the final one,
+    best_partners(), which, given a tree, a student in the tree, and a set of
+    weights for times of day, returns a list of students, sorted by "time score",
+    which signifies how much of their free time overlaps, giving more weight
+    to longer periods of consecutive time, and to time which is weighted highly.
+
+    The other functions in this module are primarily helper functions, but they
+    could be useful for other interval-tree-querying.
+"""
+
 
 def amount_overlap(start1, end1, start2, end2):
     later_start = start1 if start1 > start2 else start2
@@ -46,13 +56,17 @@ def student_overlaps(tree, student_name):
     return clean(totals)
 
 
-def best_partners(tree, student_name):
+def best_partners(tree, student_name, time_weights):
     laps = student_overlaps(tree, student_name)
     time_squares = {}
     for partner in laps:
         time_squares[partner] = 0
         for time in laps[partner]:
-            (inc, _, _) = time
+            (inc, start, end) = time
+            for period in time_weights:
+                if period[0] <= start <= period[1]:
+                    inc *= period[2]
+                    break
             time_squares[partner] += inc ** 2
     time_squares = sorted(time_squares.items(), key=lambda x: x[1], reverse=True)
     return time_squares

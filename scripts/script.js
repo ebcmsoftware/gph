@@ -35,7 +35,7 @@ $('#submitprefs').click(function() {
     dayboxes = dayboxes.trim();
     post_params = {
     	email: localStorage["email"],
-        free_days: dayboxes,
+        free_times: $("#processingMsg").val(),
     };
     function success(data, textStatus, jqXHR) {
         console.log(data);

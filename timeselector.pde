@@ -14,13 +14,14 @@ var httpGet=function(theUrl)
 };
 
 var generateDateDivs=function(timestamp, days){
-    d=new Date(timestamp);
-    d=new Date(d.getYear(), d.getMonth(), d.getDay(), 0, 0, 0);
-    timestamp=d.getTime();
+    d=new Date();
     var s="";
     for(int i=0;i<days;i++){
         d.setTime(timestamp);
-        s+="<span class='dateblock' style='float:left;width:"+700/days+"px'>"+d.getMonth()+"/"+d.getDay()+"</span>"
+        console.log("this is all weird");
+        s+="<span class='dateblock' style='float:left;width:"+700/days+"px'>"+d.getYear()+"/"+d.getMonth()+"/"+d.getDate()+"</span>";
+        timestamp+=86400000;
+        
     }
     document.getElementById("dates").innerHTML=s;
     };
