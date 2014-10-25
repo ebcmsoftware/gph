@@ -1,12 +1,16 @@
-import gflags
-import httplib2
-import json
-
-from apiclient.discovery import build
 from oauth2client.file import Storage
 from oauth2client.client import OAuth2WebServerFlow
 from oauth2client.tools import run
-from dateutil.parser import parse
+from apiclient.discovery import build
+
+import gflags
+import httplib2
+import json
+import datetime
+
+#from dateutil.parser import parse
+def parse(time):
+    datetime.strptime(time, "%Y-%m-%dT$H:%M:%S.%fZ")
 
 def jsonTime(time):
     return str(time).replace(" ", "T")+"Z"
@@ -38,7 +42,6 @@ def getGoogleFreeTime(timeMin, timeMax):
     
     FLAGS = gflags.FLAGS
 
-
     CLIENT_ID = "887830103143-ptqtmjls6qvpgjdiv94h5g4oogd0230i.apps.googleusercontent.com"
     ClIENT_SECRET = "UQSES1KIMG_rmkPaqzpRUOcu"
 
@@ -65,7 +68,7 @@ def getGoogleFreeTime(timeMin, timeMax):
     storage = Storage('calendar.dat')
     credentials = storage.get()
     if credentials is None or credentials.invalid == True:
-    credentials = run(FLOW, storage)
+        credentials = run(FLOW, storage)
 
     # Create an httplib2.Http object to handle our HTTP requests and authorize it
     # with our good Credentials.
@@ -84,8 +87,8 @@ def getGoogleFreeTime(timeMin, timeMax):
         for calendar_list_entry in calendar_list['items']:
             calendarIds.append({"id",calendar_list_entry['id']})
         page_token = calendar_list.get('nextPageToken')
-            if not page_token:
-                break
+        if not page_token:
+            break
     
     data = dict(["timeMin", timeMin], ["timeMax",jsonTime(timeMax)], ["items", jsonTime(calendarIds)])
     (resp, content) = http.request("https://www.googleapis.com/calendar/v3/freeBusy", "POST", urlencode(json.dumps(data)))
@@ -103,11 +106,3 @@ def getGoogleFreeTime(timeMin, timeMax):
          
     return findFreeTimesAmongstBusy(timePeriods, timeMin, timeMax)
      
-    
-         
-    
-    
-    
-    
-    
-    
