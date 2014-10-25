@@ -28,6 +28,7 @@ class Schedule(object):
         self.tree = IntervalTree()
         self.students = {}
         self.preferences = preferences
+        self.magnetic = ["typing"]
         if "time" not in preferences:
             self.preferences["time"] = 10
 
@@ -65,9 +66,13 @@ class Schedule(object):
             score = (tup[1] / highest) * time_weight
             prefs = {}
             for pref in self.preferences:
-                if pref in self.students[student][0] and pref in self.students[name][0] and self.students[student][0][pref] == self.students[name][0][pref]:
-                    score += self.preference_weight(pref)
-                    prefs[pref] = self.students[name][0][pref]
+                if pref in self.students[student][0] and pref in self.students[name][0]:
+                    if pref not in self.magnetic and self.students[student][0][pref] == self.students[name][0][pref]:
+                        score += self.preference_weight(pref)
+                        prefs[pref] = self.students[name][0][pref]
+                    elif pref.lower() in self.magnetic and self.students[student][0][pref] != self.students[name][0][pref]:
+                        score += self.preference_weight(pref)
+                        prefs[pref] = "opposites"
             prefs["time"] = time_between(self.tree, student, name)
             result.append((name, score, prefs))
         return sorted(result, key=lambda x: x[1], reverse=True)
