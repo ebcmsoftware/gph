@@ -26,13 +26,6 @@ $('#submitlogin').click(function() {
 });
 
 $('#submitprefs').click(function() {
-    dayboxes = '';
-    $('input').each(function(i, e) {
-        if (e.type == 'checkbox') {
-            dayboxes += e.checked ? ' 1' : ' 0';
-        }
-    });
-    dayboxes = dayboxes.trim();
     post_params = {
     	email: localStorage["email"],
         free_times: $("#free_times").val(),
