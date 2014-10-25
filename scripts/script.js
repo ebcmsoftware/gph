@@ -37,8 +37,10 @@ $('#submitprefs').click(function() {
 
 //var OauthUrl = "https://accounts.google.com/o/oauth2/auth?scope=https://www.googleapis.com/auth/calendar.readonly&redirect_uri=http://group-40.appspot.com/oauth2callback&state=%2Fprofile&response_type=token&client_id=887830103143-ptqtmjls6qvpgjdiv94h5g4oogd0230i.apps.googleusercontent.com";
 //https://accounts.google.com/o/oauth2/auth?scope=https://www.googleapis.com/auth/calendar.readonly&redirect_uri=http://group-40.appspot.com/oauth2callback&state=%2Fprofile&response_type=token&client_id=887830103143-ptqtmjls6qvpgjdiv94h5g4oogd0230i.apps.googleusercontent.com
-window.location.assign('https://accounts.google.com/o/oauth2/auth?scope=https://www.googleapis.com/auth/calendar.readonly&redirect_uri=http://group-40.appspot.com/oauth2callback&state=%2Fprofile&response_type=token&client_id=887830103143-ptqtmjls6qvpgjdiv94h5g4oogd0230i.apps.googleusercontent.com');
 
+$('#googbutton').click(function() {
+	window.location.assign('https://accounts.google.com/o/oauth2/auth?scope=https://www.googleapis.com/auth/calendar.readonly&redirect_uri=http://group-40.appspot.com/oauth2callback&state=%2Fprofile&response_type=token&client_id=887830103143-ptqtmjls6qvpgjdiv94h5g4oogd0230i.apps.googleusercontent.com');
+});
 /*
 console.log(google.gdata);
 google.load("gdata", "2");

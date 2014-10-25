@@ -22,3 +22,16 @@ input {
 #prefquizarea input {
 	font-size: 1em;
 }
+
+#googbutton{
+	float: left;
+	padding: 10px;
+	background-color: white;
+	color: black;
+	margin-top: 10px;
+	margin-bottom: 20px;
+	display: inline;
+	cursor: pointer;
+}
+
+.gphbutton
