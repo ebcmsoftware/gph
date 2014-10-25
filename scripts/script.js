@@ -26,8 +26,6 @@ $('#submit40').click(function() {
 });
 
 $('#submitprefs').click(function() {
-	console.log("YO");
-	alert($("#freeTimes").html());
     post_params = {
     	email: localStorage.getItem("gphemail"),
         free_times: $("#freeTimes").val(),
@@ -45,7 +43,7 @@ $('#submitprefs').click(function() {
 });
 
 $('#sendmatches').click(function() {
-	$.post('/matchmake', "yo just give me a fucking cron job ;)");
+	$.post('/matchmake', "hey lets send out some emails;)");
 });
 
 //var OauthUrl = "https://accounts.google.com/o/oauth2/auth?scope=https://www.googleapis.com/auth/calendar.readonly&redirect_uri=http://group-40.appspot.com/oauth2callback&state=%2Fprofile&response_type=token&client_id=887830103143-ptqtmjls6qvpgjdiv94h5g4oogd0230i.apps.googleusercontent.com";
