@@ -8,7 +8,15 @@ $('#submitbtn').click(function() {
         }
     });
     dayboxes = dayboxes.trim();
-    $.post('/adduser', dayboxes);
+    post_params = {
+        name: $('#studentname').val(),
+        email: $('#studentemail').val(),
+        free_days: dayboxes,
+    };
+    function success(data, textStatus, jqXHR) {
+        console.log(data);
+    }
+    $.post('/adduser', post_params, success);
 });
 
 });
