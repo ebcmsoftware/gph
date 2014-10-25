@@ -46,17 +46,15 @@ def student_overlaps(tree, student_name):
     return clean(totals)
 
 
-def best_partner(tree, student_name):
+def best_partners(tree, student_name):
     laps = student_overlaps(tree, student_name)
-    total_time = {}
     time_squares = {}
     for partner in laps:
-        total_time[partner] = time_squares[partner] = 0
+        time_squares[partner] = 0
         for time in laps[partner]:
             (inc, _, _) = time
-            total_time[partner] += inc;
             time_squares[partner] += inc ** 2
-    print total_time
-    print time_squares
+    time_squares = sorted(time_squares.items(), key=lambda x: x[1], reverse=True)
+    return time_squares
 
 

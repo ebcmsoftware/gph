@@ -52,12 +52,42 @@ def send_email(email=None, match=None):
     
 
 class CreateProject(webapp2.RequestHandler):
+  def post(self):
+    self.response.out.write("cre8 a new proj here: (todo)")
+    pass
+    
   def get(self):
     self.response.out.write("write a new proj here: (todo)")
 
+
+class Callback(webapp2.RequestHandler):
+  def get(self):
+    self.response.out.write(
+    '''
+    <script>
+token = location.hash.split('token=')[1].split('&')[0];
+window.location.href = 'http://group-40.appspot.com/getcals?token='+token;
+</script>
+    ''')
+
+    logging.info(self.request.get('access_token'))
+    self.response.out.write(self.request.get('access_token'))
+    return
+
+    path = os.path.join(os.path.dirname(__file__), 'index.html')
+    template_values = {
+    }
+    self.response.out.write(template.render(path, template_values))
+    return
+
+class GetCals(webapp2.RequestHandler):
+  def get(self):
+    token = self.request.get('token')
+    self.response.out.write('here: ')
+    self.response.out.write(token)
+
 class MainHandler(webapp2.RequestHandler):
   def get(self):
-    # 
     # pair people with other people
     path = os.path.join(os.path.dirname(__file__), 'index.html')
     template_values = {
@@ -100,10 +130,12 @@ class AddUser(webapp2.RequestHandler):
         overlap = overlap.strip()
         if overlap != '0 0 0 0 0 0 0':
             overlaps.append(u.email)
-    self.response.out.write(overlaps)
+    self.response.out.write(overlaps) #i have the overlaps
     user.put()
 
 app = webapp2.WSGIApplication([
+    ('/getcals', GetCals),
+    ('/oauth2callback', Callback),
     ('/createproject', CreateProject),
     ('/adduser', AddUser),
     ('/', MainHandler)

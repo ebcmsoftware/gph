@@ -6,6 +6,11 @@
 <link rel ="icon" href = "favicon.ico" type = "image/x-icon"/>
 <!-- import jquery -->
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<!--
+<script type="text/javascript" src="http://www.google.com/jsapi?autoload={modules:[{name:gdata,version:2.x,packages:[blogger,contacts,calendar]}]}"></script>
+<script src="https://apis.google.com/js/client.js?onload=init"></script>
+-->
+
 <!-- our scripts -->
 <script src="scripts/script.js"></script>
 <!-- our fonts and style -->
@@ -15,13 +20,13 @@
 
 <body>
 
-<div id = "gphloginarea">
+<div class = "gphloginarea">
 	<h1>Comp40 Partner Finder</h1>
 	<h2>Enter your name and email to get started.</h2>
 	<form>
 		<input type="text" name="studentname" placeholder = "Name..." class="input-medium"><br>
 		<input type="text" name="studentemail" placeholder = "Email..." class="input-medium"><br>
-		<input type="button" value="SUBMIT" id="submitlogin"><br>
+		<input type="button" value="Submit" id="submitlogin"><br>
 	</form>
 </div>
 

@@ -14,9 +14,9 @@
 </head>
 
 <body>
-<div id = "gphloginarea">
+<div class = "gphloginarea" id = "prefquizarea">
 	<form>
-		<h2>When are you available?</h2>
+		<h2>Time availability (*required)</h2>
 		<input type="checkbox" name="Sun" value="days" checked/>Sun
 		<input type="checkbox" name="Mon" value="days" checked/>Mon
 		<input type="checkbox" name="Tue" value="days" checked/>Tue
@@ -24,13 +24,33 @@
 		<input type="checkbox" name="Thu" value="days" checked/>Thu
 		<input type="checkbox" name="Fri" value="days" checked/>Fri
 		<input type="checkbox" name="Sat" value="days" checked/>Sat<br>
-		<h2>What's your fave text editor?</h2>
+		<div id = "googbutton">Or import your google cal</div>
+
+		<h2 style = "clear: both">Coding preferences (optional)</h2>
+		<h3>When during the day do you prefer working?</h3>
+		<input type="checkbox" name="variable" value="morning">Morning
+		<input type="checkbox" name="variable" value="afternoon">Afternoon
+		<input type="checkbox" name="variable" value="evening">Evening
+		<input type="checkbox" name="variable" value="night">Night
+		<input type="checkbox" name="variable" value="overnight">Overnight<br>
+
+		<h3>Do you prefer typing or your partner typing?</h3>
+		<input type="radio" name="variable" value="metype">Me<br>
+		<input type="radio" name="variable" value="partnerty">Partner<br>
+		<input type="button" value="Submit" id="submitbtn"><br>
+
+		<h3>What text editor do you use?</h3>
+		<input type="radio" name="texteditor" value="vim">Vim<br>
 		<input type="radio" name="texteditor" value="sublime">Sublime<br>
-		<input type="radio" name="texteditor" value="other">Sublime/ sometimes vim when people make me<br><br>
-		<h2>Camel case or underscores?</h2>
+		<input type="radio" name="texteditor" value="kate">Kate<br>
+		<input type="radio" name="texteditor" value="emacs">Emacs<br>
+		<input type="radio" name="texteditor" value="msword">Microsoft Word<br>
+		
+		<h3>Camel case or underscores?</h3>
 		<input type="radio" name="variable" value="camel">Camel Case<br>
-		<input type="radio" name="variable" value="underscore">Underscores<br><br>
-		<input type="button" value="SUBMIT" id="submitbtn">
+		<input type="radio" name="variable" value="underscore">Underscores<br>
+
 	</form>
 </div>
+<h2 id = "hooray" style = "display:none">Hooray!</h2>
 </body>
