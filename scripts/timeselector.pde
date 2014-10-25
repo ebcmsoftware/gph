@@ -73,7 +73,7 @@ void setup(){
   times=new ArrayList<Time>();
   freeTimes=new ArrayList<Integer>();
   printMessage("");
-  String[] s=httpGet("http://group-40.appspot.com/getproject").split(' ');
+  String[] s=split(httpGet("http://group-40.appspot.com/getproject"), " ");
   days=parseInt(s[2]);
   startTime=parseInt(s[0])*1000;
   generateDateDivs(startTime, days);
