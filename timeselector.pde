@@ -125,7 +125,7 @@ void drawTimes(){
     //fill(255,0,0);
     int y=min(t1.quarterHour, t2.quarterHour)*5+5;
     int x;
-    if(t1.day<t2.day)
+    if(t1.day<=t2.day)
         x=(t2.day+1)*700/days-25;
     else
         x=t1.day*700/days-25;
