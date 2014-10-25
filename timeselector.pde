@@ -124,7 +124,11 @@ void drawTimes(){
     rect(t1.day*700/days, t1.quarterHour*5, (t2.day-t1.day+1)*700/days, t2.quarterHour*5-t1.quarterHour*5);
     //fill(255,0,0);
     int y=min(t1.quarterHour, t2.quarterHour)*5+5;
-    int x=(max(t1.day, t2.day)+1)*700/days-25;
+    int x;
+    if(t1.day<=t2.day)
+        x=(t2.day+1)*700/days-25;
+    else
+        x=t1.day*700/days-25;
     strokeWeight(2);
     stroke(255,0,0);
     line(x+4,y+4,x+16,y+16);
