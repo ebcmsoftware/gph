@@ -148,7 +148,7 @@ class Matchmake(webapp2.RequestHandler):
                 continue
             interval_list.append([to_utc(a),to_utc(b)])
         if interval_list != []:
-            s.add_student(user.email, interval_list, preferences={'editor':user.texteditor, 'year':user.year}, time_weights=[])
+            s.add_student(user.email, interval_list, preferences={'editor':user.text_editor, 'year':user.year}, time_weights=[])
             logging.info(interval_list)
     pairs = schedule.pair_students(s)
     for (email1, email2, reasons) in pairs:
@@ -318,7 +318,7 @@ class AddPrefs(webapp2.RequestHandler):
     }
     try:
         user = response[0]
-        user.texteditor = texteditor
+        user.text_editor = texteditor
         user.year = years[classyear]
     except IndexError:
         return
