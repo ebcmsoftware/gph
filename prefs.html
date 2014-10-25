@@ -49,19 +49,27 @@ function getProcessingSketchId () { return 'timeselector'; }
 				</noscript>
 				</span>
 	    </div>
+
 	    <span id = "freeTimes" style="display:none"></span>
 
 		<h2 style = "clear: both">Coding preferences (optional)</h2>
+		<h3>What year are you?</h3>
+		<input type="radio" name="classyear" value = "freshman">Freshman<br>
+		<input type="radio" name="classyear" value = "sophomore">Sophomore<br>
+		<input type="radio" name="classyear" value = "junior">Junior<br>
+		<input type="radio" name="classyear" value = "senior">Senior<br>
+		<input type="radio" name="classyear" value = "oldguys">Non-undergrad<br>
+
 		<h3>When during the day do you prefer working?</h3>
-		<input type="checkbox" name="variable" value="morning">Morning
-		<input type="checkbox" name="variable" value="afternoon">Afternoon
-		<input type="checkbox" name="variable" value="evening">Evening
-		<input type="checkbox" name="variable" value="night">Night
-		<input type="checkbox" name="variable" value="overnight">Overnight<br>
+		<input type="checkbox" name="timeofday" value="morning">Morning
+		<input type="checkbox" name="timeofday" value="afternoon">Afternoon
+		<input type="checkbox" name="timeofday" value="evening">Evening
+		<input type="checkbox" name="timeofday" value="night">Night
+		<input type="checkbox" name="timeofday" value="overnight">Overnight<br>
 
 		<h3>Do you prefer typing or your partner typing?</h3>
-		<input type="radio" name="variable" value="metype">Me<br>
-		<input type="radio" name="variable" value="partnerty">Partner<br>
+		<input type="radio" name="whotypes" value="metype">Me<br>
+		<input type="radio" name="whotypes" value="partnertype">Partner<br>
 		
 		<h3>What text editor do you use?</h3>
 		<input type="radio" name="texteditor" value="vim">Vim<br>
@@ -69,10 +77,7 @@ function getProcessingSketchId () { return 'timeselector'; }
 		<input type="radio" name="texteditor" value="kate">Kate<br>
 		<input type="radio" name="texteditor" value="emacs">Emacs<br>
 		<input type="radio" name="texteditor" value="msword">Microsoft Word<br>
-		
-		<h3>Camel case or underscores?</h3>
-		<input type="radio" name="variable" value="camel">Camel Case<br>
-		<input type="radio" name="variable" value="underscore">Underscores<br>
+
 		<input type="button" value="Submit" id="submitprefs"><br><br>
 
 	</form>
