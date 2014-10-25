@@ -1,11 +1,10 @@
-import webapp2
-
 import re
 import os
 import json
 import random
 import urllib
 import logging
+import webapp2
 import urllib2
 
 from datetime import datetime
@@ -15,17 +14,36 @@ from google.appengine.ext import webapp
 from google.appengine.ext.webapp import template
 from google.appengine.ext.webapp.util import run_wsgi_app
 
+class Project(ndb.Model):
+  start = ndb.DateTimeProperty()
+  end = ndb.DateTimeProperty()
+
+class User(ndb.Model):
+  name = ndb.StringProperty(default='')
+  google_acct = ndb.StringProperty(default='')
+  email = ndb.StringProperty()
+  text_editor = ndb.StringProperty()
+  year = ndb.IntegerProperty(default=0) # 0 = freshman, ..., 4 = grad student
+  sleep_hours = ndb.IntegerProperty()
+
+  @classmethod
+  def query_users(self, ancestor_key):
+    return self.query(ancestor=ancestor_key)
+
+
 class MainHandler(webapp2.RequestHandler):
     def get(self):
-#
-        #pair people with other people
+        # 
+        # pair people with other people
         path = os.path.join(os.path.dirname(__file__), 'index.html')
-        self.response.out.write(template.render(path, {}))
+        template_values = {
+        }
+        self.response.out.write(template.render(path, template_values))
         return
 
 class AddUser(webapp2.RequestHandler):
     def post(self):
-        logging.debug(self.requests)
+        logging.debug(self.request)
         self.response.write('ohohohohohohohoh')
 
 app = webapp2.WSGIApplication([
