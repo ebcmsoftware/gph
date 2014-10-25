@@ -91,7 +91,7 @@ def pair_students(sched):
     paired = []
     for x in pairings:
         for y in x[1]:
-            if y[0] not in paired:
+            if y[0] not in paired and x[0] not in paired:
                 final_pairings.append((x[0], y[0], y[2]))
                 paired.append(x[0])
                 paired.append(y[0])
