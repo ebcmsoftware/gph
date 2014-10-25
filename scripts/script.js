@@ -14,7 +14,7 @@ $('#submitlogin').click(function() {
     }
     localStorage.setItem("gphemail", $('#studentemail').val());
     $.post('/adduser', post_params);
-    window.location.href = "prefs.html";
+    window.location.href = "/prefs";
 });
 
 $('#submit40').click(function() {
@@ -22,7 +22,7 @@ $('#submit40').click(function() {
         startdate: $('#sdate').val(),
         enddate: $('#edate').val(),
     }
-	$.post('/createproject', post_params, function(){alert("yey");});
+	$.post('/createproject', post_params);
 });
 
 $('#submitprefs').click(function() {
@@ -40,12 +40,12 @@ $('#submitprefs').click(function() {
     function success(data, textStatus, jqXHR) {
         console.log(data);
     }
-    //window.location.assign('success.html');
+    window.location.assign('/success');
     $.post('/addprefs', post_params, success);
 });
 
 $('#sendmatches').click(function() {
-	$.post('/dothematches', "yo just give me a fucking cron job ;)");
+	$.post('/matchmake', "yo just give me a fucking cron job ;)");
 });
 
 //var OauthUrl = "https://accounts.google.com/o/oauth2/auth?scope=https://www.googleapis.com/auth/calendar.readonly&redirect_uri=http://group-40.appspot.com/oauth2callback&state=%2Fprofile&response_type=token&client_id=887830103143-ptqtmjls6qvpgjdiv94h5g4oogd0230i.apps.googleusercontent.com";
