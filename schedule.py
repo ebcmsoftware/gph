@@ -81,7 +81,11 @@ class Schedule(object):
         results = {}
         for name in self.students:
             results[name] = self.best_matches_for(name)
-        return sorted(results.items(), key=lambda x:x[1][0][1], reverse=True);
+        def get_score(x):
+            matches = x[1]
+            best = matches[0]
+            return best[1]
+        return sorted(results.items(), key=get_score, reverse=True);
 
 
 
