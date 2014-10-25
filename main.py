@@ -55,7 +55,8 @@ class MainHandler(webapp2.RequestHandler):
 
 class AddUser(webapp2.RequestHandler):
   def post(self):
-    logging.debug(self.request)
+    logging.info(self.request)
+    '''
     greetings_query = Room.query_book(ancestor_key=guestbook_key(roomkey))
     response = greetings_query.fetch(1)
     if response == []:
@@ -81,6 +82,7 @@ class AddUser(webapp2.RequestHandler):
             self.response.out.write(template.render(path, {}))
             self.redirect("/error")
             return
+    '''
     self.response.write('ohohohohohohohoh')
 
 app = webapp2.WSGIApplication([
