@@ -56,6 +56,17 @@ def student_overlaps(tree, student_name):
     return clean(totals)
 
 
+def time_between(tree, s1, s2):
+    laps = student_overlaps(tree, s1)
+    overlap = 0
+    for partner in laps:
+        if partner == s1:
+            for time in laps[partner]:
+                (inc, start, end) = time
+                overlap += inc
+    return overlap
+
+
 def best_partners(tree, student_name, time_weights):
     laps = student_overlaps(tree, student_name)
     time_squares = {}
