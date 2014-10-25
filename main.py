@@ -37,12 +37,12 @@ def email_key(email=''):
 
 class User(ndb.Model):
   name = ndb.StringProperty(default='')
-  google_acct = ndb.StringProperty(default='_')
   email = ndb.StringProperty()
-  free_days = ndb.StringProperty(default='0 0 0 0 0 0 0')
-  text_editor = ndb.StringProperty(default='_')
+  #free_days = ndb.StringProperty(default='0 0 0 0 0 0 0')
+  text_editor = ndb.StringProperty(default='')
   year = ndb.IntegerProperty(default=0) # 0 = freshman, ..., 4 = grad student
-  sleep_hours = ndb.StringProperty(default='_')
+  sleep_hours = ndb.StringProperty(default='')
+  busy_times = ndb.StringProperty(default='')
 
   @classmethod
   def query_users(self, email):
@@ -80,11 +80,47 @@ class GetProject(webapp2.RequestHandler):
     self.response.out.write('%s\n%s\n%s' %(to_utc(project.start), to_utc(project.end), (project.end - project.start).days))
     
 
-class FindMatches(webapp2.RequestHandler):
+class Matchmake(webapp2.RequestHandler):
+  def get(self):
+    # send emails to erryone based on heuristic maximum funciton
+    # if odd number, :(
+    users = User.all_users()
+    for user in users:
+        self.response.out.write(user)
+        self.response.out.write(user.email)
+
+    def findFreeTimesAmongstBusy(self, timePeriods, startTime, endTime):
+        startTimes=[startTime]
+        endTimes=[]
+        for time in timePeriods:
+            freeUntil=True
+            freeAfter=True
+            for time2 in timePeriods:
+                if(time[0] > time2[0] and time[0] < time2[1]):
+                    freeUntil=False
+                if(time[1] > time2[0] and time[1] < time2[1]):
+                    freeAfter=False
+            if(freeUntil):
+                endTimes.append(time[0])
+            if(freeAfter):
+                startTimes.append(time[1])
+        startTimes.sort()
+        endTimes.sort()
+        endTimes.append(endTime)
+        freeTimes=[]
+        for i in range(len(startTimes)):
+            freeTimes.append((startTimes[i],endTimes[i]))
+        return freeTimes
+
   def post(self):
     # send emails to erryone based on heuristic maximum funciton
     # if odd number, :(
-    pass
+    users = User.all_users()
+    s = Schedule()
+    for user in users:
+        add_student(user.email, user.busy_times, preferences={}, time_weights=[])
+    #we have a done schedj
+
 
 
 class CreateProject(webapp2.RequestHandler):
@@ -122,7 +158,7 @@ class Callback(webapp2.RequestHandler):
     '''
     <script>
 token = location.hash.split('token=')[1].split('&')[0];
-window.location.href = 'http://group-40.appspot.com/getbusytimes?token='+token;
+window.location.href = 'http://group-40.appspot.com/getbusytimes?token='+token+'&email='+localStorage['gphemail'];
 </script>
     ''')
 
@@ -139,6 +175,7 @@ window.location.href = 'http://group-40.appspot.com/getbusytimes?token='+token;
 class GetBusyTimes(webapp2.RequestHandler):
   def get(self):
     token = self.request.get('token')
+    email = self.request.get('email')
     timeMin = datetime.MINYEAR
     timeMax = datetime.MAXYEAR
 
@@ -183,17 +220,16 @@ class GetBusyTimes(webapp2.RequestHandler):
         for item in items:
             try:
                 (a, b) = (item['start']['dateTime'], item['end']['dateTime'])
-                interval_list.append((parse(a), parse(b)))
+                interval_list.append([parse(a), parse(b)])
             except KeyError:
                 pass
-    #data = urllib.urlencode(values)
-    #data = str(values)
-    #logging.info(data)
-    #url = 'https://www.googleapis.com/calendar/v3/freeBusy'
-    #req = urllib2.Request(url, data)
-    #response = urllib2.urlopen(req)
-    #response_text = response.read()
-    #response = urllib2.urlopen('https://www.googleapis.com/calendar/v3/users/me/freeBusy?access_token='+token)
+    string_intervals = json.dumps(interval_list)
+    user_query = User.query_users(email=email_key(email))
+    response = user_query.fetch(1)
+    user = response[0]
+    user.busy_times = string_intervals
+    user.put()
+
 
 class MainHandler(webapp2.RequestHandler):
   def get(self):
@@ -204,47 +240,28 @@ class MainHandler(webapp2.RequestHandler):
     self.response.out.write(template.render(path, template_values))
     return
 
+
 class AddUser(webapp2.RequestHandler):
   def post(self):
     name = self.request.get('name')
     email = self.request.get('email')
-    free_days = (self.request.get('free_days'))
-#if gmail then go to google cal selector else not
-#TODO: assert(email is valid)
-    all_users = User.all_users()
-    for user in all_users:
-        logging.info(user.free_days)
+    try:
+        (x, site) = email.split('@')
+        machine = site.split('.')[1]
+    except IndexError:
+        return
     user_query = User.query_users(email=email_key(email))
     response = user_query.fetch(1)
     if response == []: #create a new user
         user = User(parent=email_key(email))
         user.name = name
-        user.free_days = free_days
         user.email = email
     else:
         user = response[0]
-        user.free_days = free_days
-    logging.info(all_users)
-    overlaps = []
-    for u in all_users:
-        if u == user:
-            continue
-        logging.debug(u.free_days)
-        s2 = u.free_days.split(' ')
-        overlap = ''
-        for i, day in enumerate(free_days.split(' ')):
-            if day == s2[i]: #if we found a day match
-                overlap += ' 1'
-            else:
-                overlap += ' 0'
-        overlap = overlap.strip()
-        if overlap != '0 0 0 0 0 0 0':
-            overlaps.append(u.email)
-    self.response.out.write(overlaps) #i have the overlaps
     user.put()
 
 app = webapp2.WSGIApplication([
-    ('/findmatches', FindMatches),
+    ('/matchmake', Matchmake),
     ('/getbusytimes', GetBusyTimes),
     ('/oauth2callback', Callback),
     ('/getproject', GetProject),
