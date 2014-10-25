@@ -1,25 +1,38 @@
 import re
 import os
 import json
+#import gcal
 import random
 import urllib
 import logging
 import webapp2
 import urllib2
 
-from datetime import datetime
+import datetime
+#from datetime import datetime
 from google.appengine.ext import ndb
 from google.appengine.api import mail
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp import template
 from google.appengine.ext.webapp.util import run_wsgi_app
 
+def name_key(name=''):
+  return ndb.Key('New Project', name)
+
 class Project(ndb.Model):
   start = ndb.DateTimeProperty()
   end = ndb.DateTimeProperty()
+  name = ndb.StringProperty() 
+
+  @classmethod
+  def query_projects(self, name):
+    return self.query(ancestor=name)
+
+  @classmethod
+  def all_projects(self):
+    return self.query()
 
 def email_key(email=''):
-  #Constructs a Datastore key for a Guestbook entity with guestbook_name.
   return ndb.Key('New User', email)
 
 class User(ndb.Model):
@@ -53,6 +66,17 @@ def send_email(email=None, match=None):
 
 class CreateProject(webapp2.RequestHandler):
   def post(self):
+    project_query = Project.query_projects(email=email_key(email))
+    token = self.request.get('token')
+    response = project_query.fetch(1)
+    if response == []: 
+        project = Project(parent=email_key(email))
+        project.name = name
+        project.free_days = free_days
+        project.email = email
+    else:
+        project = response[0]
+        project.free_days = free_days
     self.response.out.write("cre8 a new proj here: (todo)")
     pass
     
@@ -83,8 +107,16 @@ window.location.href = 'http://group-40.appspot.com/getcals?token='+token;
 class GetCals(webapp2.RequestHandler):
   def get(self):
     token = self.request.get('token')
-    self.response.out.write('here: ')
     self.response.out.write(token)
+    timeMin = datetime.MINYEAR
+    timeMax = datetime.MAXYEAR
+
+    #data = dict([['access_token', token], ["timeMin", timeMin], ["timeMax",timeMax]])#, ["items", jsonTime(calendarIds)])
+    response = urllib2.urlopen('https://www.googleapis.com/calendar/v3/users/me/calendarList?'+token)
+    self.response.out.write(response.responseText)
+    #(resp, content) = http.request("https://www.googleapis.com/calendar/v3/freeBusy", "POST", urlencode(json.dumps(data)))
+    
+    #self.response.out.write(gcal.getGoogleFreeTime(timeMin, timeMax))
 
 class MainHandler(webapp2.RequestHandler):
   def get(self):
