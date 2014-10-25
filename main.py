@@ -52,16 +52,16 @@ class User(ndb.Model):
   def all_users(self):
     return self.query()
 
-def send_email(email=None, match=None):
-    if email not in ("", None) and match not in ("", None):
+def send_email(email=None, match_name=None, match_email=None):
+    if email not in ("", None) and match_name not in ("", None) and match_email not in ('', None):
         mail.send_mail(sender="the gph team todo change this lol <eric.bailey@tufts.edu>",
                        to=email,
                        subject="We've found you a project match!!",
                        body=
-            """weve matched u with some1
+            """weve matched u with %s
 
             this is their email address: %s
-            """ % (match))
+            """ % (match_name, match_email))
     
 
 class GetProject(webapp2.RequestHandler):
@@ -119,8 +119,18 @@ class Matchmake(webapp2.RequestHandler):
     s = Schedule()
     for user in users:
         add_student(user.email, user.busy_times, preferences={}, time_weights=[])
-    #we have a done schedj
+    pairs = schedule.pair_students(s)
+    for (email1, email2) in pairs:
+        user_query = User.query_users(email=email_key(email2))
+        response = user_query.fetch(1)
+        user2 = response[0]
+        send_email(email1, user2.name)
 
+        user_query = User.query_users(email=email_key(email1))
+        response = user_query.fetch(1)
+        user1 = response[0]
+        send_email(email2, user1.name)
+    #we have a done schedj yeeeeeeeeeeeeee
 
 
 class CreateProject(webapp2.RequestHandler):
