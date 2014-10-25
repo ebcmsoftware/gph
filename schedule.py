@@ -73,7 +73,7 @@ class Schedule(object):
                     elif pref.lower() in self.magnetic and self.students[student][0][pref] != self.students[name][0][pref]:
                         score += self.preference_weight(pref)
                         prefs[pref] = "opposites"
-            prefs["time"] = time_between(self.tree, student, name)
+            prefs["time"] = "{0} hours in common".format(time_between(self.tree, student, name) / 3600)
             result.append((name, score, prefs))
         return sorted(result, key=lambda x: x[1], reverse=True)
 
