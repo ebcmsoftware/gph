@@ -4,12 +4,21 @@ body {
 	font-family: 'Roboto', sans-serif;
 }
 
-#gphloginarea{
+.gphloginarea{
 	width: 80%;
 	height: 50%;
 	margin: 10% auto;
 }
 
-.input{
-	border-radius: 0px;
+input {
+	border-radius: 2px;
+	border: 0px;
+	margin-bottom: 10px;
+	padding: 5px;
+	font-size: 1.2em;
+	font-family: 'Roboto', sans-serif;
+}
+
+#prefquizarea input {
+	font-size: 1em;
 }

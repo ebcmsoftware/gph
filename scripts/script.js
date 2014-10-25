@@ -5,8 +5,9 @@ $('#submitlogin').click(function() {
         name: $('#studentname').val(),
         email: $('#studentemail').val(),
     }
-    localStorage.set("email", post_params["email"]);
+    localStorage["email"] = post_params["email"];
     $.post('/adduser', post_params);
+    window.location.href = "prefs.html";
 });
 
 $('#submitprefs').click(function() {
@@ -18,7 +19,7 @@ $('#submitprefs').click(function() {
     });
     dayboxes = dayboxes.trim();
     post_params = {
-    	email: localStorage.get("email");
+    	email: localStorage["email"],
         free_days: dayboxes,
     };
     function success(data, textStatus, jqXHR) {
