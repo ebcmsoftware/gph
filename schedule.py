@@ -63,10 +63,13 @@ class Schedule(object):
         for tup in best_times:
             name = tup[0]
             score = (tup[1] / highest) * time_weight
+            prefs = {}
             for pref in self.preferences:
                 if pref in self.students[student][0] and pref in self.students[name][0] and self.students[student][0][pref] == self.students[name][0][pref]:
                     score += self.preference_weight(pref)
-            result.append((name, score));
+                    prefs[pref] = self.students[name][0][pref]
+            prefs["time"] = time_between(self.tree, student, name)
+            result.append((name, score, prefs))
         return sorted(result, key=lambda x: x[1], reverse=True)
 
     def get_all_best_matches(self):
@@ -84,7 +87,7 @@ def pair_students(sched):
     for x in pairings:
         for y in x[1]:
             if y[0] not in paired:
-                final_pairings.append((x[0], y[0]))
+                final_pairings.append((x[0], y[0], y[2]))
                 paired.append(x[0])
                 paired.append(y[0])
                 break

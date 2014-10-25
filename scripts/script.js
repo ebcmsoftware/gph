@@ -26,7 +26,8 @@ $('#submit40').click(function() {
 });
 
 $('#submitprefs').click(function() {
-	console.log("YO")
+	console.log("YO");
+	alert($("#freeTimes").html());
     post_params = {
     	email: localStorage.getItem("gphemail"),
         free_times: $("#freeTimes").val(),
