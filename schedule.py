@@ -18,6 +18,10 @@ from intervaltree import *
     The score is based on total overlapping free time (with preference given for
     longer amounts of consecutive time), how much of that free time is a preferred
     time for the student, and how many of their preferences are shared.
+    You can also search for the best matches for everyone, which results in
+    a list of tuples being returned, where the first value is the student, and
+    the second is a list of how well they pair with each other student.
+    The list is sorted by the score of the best match found for that student.
 """
 class Schedule(object):
     def __init__(self, preferences={}):
@@ -70,3 +74,18 @@ class Schedule(object):
         for name in self.students:
             results[name] = self.best_matches_for(name)
         return sorted(results.items(), key=lambda x:x[1][0][1], reverse=True);
+
+
+
+def pair_students(sched):
+    pairings = sched.get_all_best_matches()
+    final_pairings = []
+    paired = []
+    for x in pairings:
+        for y in x[1]:
+            if y[0] not in paired:
+                final_pairings.append((x[0], y[0]))
+                paired.append(x[0])
+                paired.append(y[0])
+                break
+    return final_pairings
