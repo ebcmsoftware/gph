@@ -18,8 +18,8 @@ var generateDateDivs=function(timestamp, days){
     var s="";
     for(int i=0;i<days;i++){
         d.setTime(timestamp);
-        console.log("this is all weird");
-        s+="<span class='dateblock' style='float:left;width:"+700/days+"px'>"+d.getYear()+"/"+d.getMonth()+"/"+d.getDate()+"</span>";
+        console.log(d);
+        s+="<span class='dateblock' style='float:left;width:"+700/days+"px'>"+(1+d.getMonth())+"/"+d.getDate()+"</span>";
         timestamp+=86400000;
         
     }
@@ -75,10 +75,10 @@ void setup(){
   times=new ArrayList<Time>();
   freeTimes=new ArrayList<Integer>();
   printMessage("");
-  String[] s={"1413825240","1413825240","7"};
+  String[] s={"1413306840","1413825240","7"};
   //String[] s=httpGet("http://group-40.appspot.com/getproject").split(' ');
   days=parseInt(s[2]);
-  startTime=parseInt(s[0]);
+  startTime=parseInt(s[0])*1000;
   generateDateDivs(startTime, days);
   putTimes();;
 }
