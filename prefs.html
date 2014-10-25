@@ -1,0 +1,36 @@
+<html>
+<head>
+<!-- boilerplate shit -->
+<meta charset="UTF-8"> 
+<title>GPH-40</title>
+<link rel ="icon" href = "favicon.ico" type = "image/x-icon"/>
+<!-- import jquery -->
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<!-- our scripts -->
+<script src="scripts/script.js"></script>
+<!-- our fonts and style -->
+<link href='http://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'/>
+<link rel="stylesheet" type="text/css" href="style/gphstyle.css"/>
+</head>
+
+<body>
+<div id = "gphloginarea">
+	<form>
+		<h2>When are you available?</h2>
+		<input type="checkbox" name="Sun" value="days" checked/>Sun
+		<input type="checkbox" name="Mon" value="days" checked/>Mon
+		<input type="checkbox" name="Tue" value="days" checked/>Tue
+		<input type="checkbox" name="Wed" value="days" checked/>Wed
+		<input type="checkbox" name="Thu" value="days" checked/>Thu
+		<input type="checkbox" name="Fri" value="days" checked/>Fri
+		<input type="checkbox" name="Sat" value="days" checked/>Sat<br>
+		<h2>What's your fave text editor?</h2>
+		<input type="radio" name="texteditor" value="sublime">Sublime<br>
+		<input type="radio" name="texteditor" value="other">Sublime/ sometimes vim when people make me<br><br>
+		<h2>Camel case or underscores?</h2>
+		<input type="radio" name="variable" value="camel">Camel Case<br>
+		<input type="radio" name="variable" value="underscore">Underscores<br><br>
+		<input type="button" value="SUBMIT" id="submitbtn">
+	</form>
+</div>
+</body>

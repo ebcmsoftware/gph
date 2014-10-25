@@ -1,15 +1,21 @@
 <html>
 <head>
+<!-- boilerplate shit -->
+<meta charset="UTF-8"> 
+<title>GPH-40</title>
+<link rel ="icon" href = "favicon.ico" type = "image/x-icon"/>
+<!-- import jquery -->
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<!--
 <script type="text/javascript" src="http://www.google.com/jsapi?autoload={modules:[{name:gdata,version:2.x,packages:[blogger,contacts,calendar]}]}"></script>
 <script src="https://apis.google.com/js/client.js?onload=init"></script>
+-->
 
-
+<!-- our scripts -->
 <script src="scripts/script.js"></script>
+<!-- our fonts and style -->
+<link href='http://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'/>
 <link rel="stylesheet" type="text/css" href="style/gphstyle.css"/>
-<title>GPH-40</title>
-<link href='http://fonts.googleapis.com/css?family=Roboto+Condensed:300' rel='stylesheet' type='text/css'/>
-<link rel ="icon" href = "favicon.ico" type = "image/x-icon"/>
 </head>
 
 <body>
@@ -18,17 +24,9 @@
 	<h1>Comp40 Partner Finder</h1>
 	<h2>Enter your name and email to get started.</h2>
 	<form>
-		<input type="text" id="studentname" name="studentname" placeholder = "Name..."><br>
-		<input type="text" id="studentemail" name="studentemail" placeholder = "Email..."><br>
-		<h2>Check for when you're available:</h2>
-		<input type="checkbox" name="Sun" value="" checked/>Sun
-		<input type="checkbox" name="Mon" value="" checked/>Mon
-		<input type="checkbox" name="Tue" value="" checked/>Tue
-		<input type="checkbox" name="Wed" value="" checked/>Wed
-		<input type="checkbox" name="Thu" value="" checked/>Thu
-		<input type="checkbox" name="Fri" value="" checked/>Fri
-		<input type="checkbox" name="Sat" value="" checked/>Sat<br>
-		<input type="button" value="SUBMIT" id="submitbtn">
+		<input type="text" name="studentname" placeholder = "Name..." class="input-medium"><br>
+		<input type="text" name="studentemail" placeholder = "Email..." class="input-medium"><br>
+		<input type="button" value="SUBMIT" id="submitlogin"><br>
 	</form>
 </div>
 
