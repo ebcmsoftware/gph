@@ -32,6 +32,18 @@ class User(ndb.Model):
 
 
 class MainHandler(webapp2.RequestHandler):
+    def send_email(self, email=None, match=None):
+        if email not in ("", None) and match not in ("", None):
+            mail.send_mail(sender="the gph team todo change this lol <tuftswhistling@gmail.com>",
+                           to=email,
+                           subject="We've found you a project match!!",
+                           body=
+            """weve matched u with some1
+
+            this is their email address: %s
+            """ % (match))
+    
+
     def get(self):
         # 
         # pair people with other people
