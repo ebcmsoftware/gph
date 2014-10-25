@@ -58,14 +58,14 @@ def send_email(email=None, match_name=None, match_email=None, reasons=None):
         bod = """We've matched you with %s for the following reasons:
               """ % (match_name)
         for r in reasons:
-            body += r + """ {0}
+            bod += r + """ {0}
                         """.format(reasons[r])
-            body += """
+            bod += """
             this is their email address: %s
             """ % match_email
-        mail.send_mail(sender="the gph team todo change this lol <eric.bailey@tufts.edu>",
+        mail.send_mail(sender="the <x> team (change this) <popcorncolonel@gmail.com>",
                        to=email,
-                       subject="We've found you a project match!!",
+                       subject="We've found you a project partner!",
                        body= bod)
     
 
@@ -134,7 +134,7 @@ class Matchmake(webapp2.RequestHandler):
     # send emails to erryone based on heuristic maximum funciton
     # if odd number, :(
     users = User.all_users()
-    s = schedule.Schedule()
+    s = schedule.Schedule({'editor':0.5, 'year':0.5})
     for user in users:
         busy_list = user.busy_times
         interval_list = []
@@ -148,7 +148,7 @@ class Matchmake(webapp2.RequestHandler):
                 continue
             interval_list.append([to_utc(a),to_utc(b)])
         if interval_list != []:
-            s.add_student(user.email, interval_list, preferences={}, time_weights=[])
+            s.add_student(user.email, interval_list, preferences={'editor':user.texteditor, 'year':user.year}, time_weights=[])
             logging.info(interval_list)
     pairs = schedule.pair_students(s)
     for (email1, email2, reasons) in pairs:
@@ -301,6 +301,30 @@ class MainHandler(webapp2.RequestHandler):
     return
 
 
+class AddPrefs(webapp2.RequestHandler):
+  def post(self):
+    texteditor = self.request.get('texteditor')
+    classyear = self.request.get('classyear')
+    email = self.request.get('email')
+    user_query = User.query_users(email=email_key(email))
+    response = user_query.fetch(1)
+
+    years = {
+        'freshman':0,
+        'sophomore':1,
+        'junior':2,
+        'senior':3,
+        'oldguys':4,
+    }
+    try:
+        user = response[0]
+        user.texteditor = texteditor
+        user.year = years[classyear]
+    except IndexError:
+        return
+    user.put()
+
+
 class AddUser(webapp2.RequestHandler):
   def post(self):
     name = self.request.get('name')
@@ -329,6 +353,7 @@ app = webapp2.WSGIApplication([
     ('/createproject', CreateProject),
     ('/success', Success),
     ('/adduser', AddUser),
+    ('/addprefs', AddPrefs),
     ('/prefs', Prefs),
     ('/', MainHandler)
 ], debug=True)
