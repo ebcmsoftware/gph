@@ -17,6 +17,14 @@ $('#submitlogin').click(function() {
     window.location.href = "prefs.html";
 });
 
+$('#submitlogin').click(function() {
+	post_params = {
+        startdate: $('#sdate').val(),
+        enddate: $('#edate').val(),
+    }
+	$.post('/createproj', post_params);
+});
+
 $('#submitprefs').click(function() {
     dayboxes = '';
     $('input').each(function(i, e) {

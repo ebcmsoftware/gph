@@ -6,11 +6,19 @@
 <link rel ="icon" href = "favicon.ico" type = "image/x-icon"/>
 <!-- import jquery -->
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<meta name="Generator" content="Processing" />
+
 <!-- our scripts -->
 <script src="scripts/script.js"></script>
 <!-- our fonts and style -->
 <link href='http://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'/>
 <link rel="stylesheet" type="text/css" href="style/gphstyle.css"/>
+
+<script src="processing.js" type="text/javascript"></script>
+		<script type="text/javascript">
+// convenience function to get the id attribute of generated sketch html element
+function getProcessingSketchId () { return 'timeselector'; }
+</script>
 </head>
 
 <body>
@@ -24,8 +32,22 @@
 		<input type="checkbox" name="Thu" value="days" checked/>Thu
 		<input type="checkbox" name="Fri" value="days" checked/>Fri
 		<input type="checkbox" name="Sat" value="days" checked/>Sat<br>
-		<div id = "googbutton">Or import your google cal</div>
-
+		<div id = "googbutton">Or import your google cal</div><br>
+		<h2> or do this thing </h2>
+		<div id="content">
+			<div width="700">
+                                <span id="dates"></span>
+				<canvas id="timeselector" data-processing-sources="timeselector.pde" 
+						width="700" height="480">
+					<p>Your browser does not support the canvas tag.</p>
+					<!-- Note: you can put any alternative content here. -->
+				</canvas>
+				<noscript>
+					<p>JavaScript is required to view the contents of this page.</p>
+				</noscript>
+	    	</div>
+	    </div>
+	    <input id = "processingMsg" style = "display:none">
 		<h2 style = "clear: both">Coding preferences (optional)</h2>
 		<h3>When during the day do you prefer working?</h3>
 		<input type="checkbox" name="variable" value="morning">Morning
