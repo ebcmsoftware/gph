@@ -274,7 +274,7 @@ class GetBusyTimes(webapp2.RequestHandler):
     user = response[0]
     user.busy_times = interval_list
     user.put()
-    self.redirect('/success')
+    self.redirect('/prefs')
 
 
 class Prefs(webapp2.RequestHandler):
