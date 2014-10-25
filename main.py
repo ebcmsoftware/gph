@@ -53,16 +53,20 @@ class User(ndb.Model):
   def all_users(self):
     return self.query()
 
-def send_email(email=None, match_name=None, match_email=None):
+def send_email(email=None, match_name=None, match_email=None, reasons=None):
     if email not in ("", None) and match_name not in ("", None) and match_email not in ('', None):
+        bod = """We've matched you with %s for the following reasons:
+              """ % (match_name)
+        for r in reasons:
+            body += r + """ {0}
+                        """.format(reasons[r])
+            body += """
+            this is their email address: %s
+            """ % match_email
         mail.send_mail(sender="the gph team todo change this lol <eric.bailey@tufts.edu>",
                        to=email,
                        subject="We've found you a project match!!",
-                       body=
-            """weve matched u with %s
-
-            this is their email address: %s
-            """ % (match_name, match_email))
+                       body= bod)
     
 
 class GetProject(webapp2.RequestHandler):
@@ -147,16 +151,16 @@ class Matchmake(webapp2.RequestHandler):
             s.add_student(user.email, interval_list, preferences={}, time_weights=[])
             logging.info(interval_list)
     pairs = schedule.pair_students(s)
-    for (email1, email2) in pairs:
+    for (email1, email2, reasons) in pairs:
         user_query = User.query_users(email=email_key(email2))
         response = user_query.fetch(1)
         user2 = response[0]
-        send_email(email1, user2.name)
+        send_email(email1, user2.name, email2, reasons)
 
         user_query = User.query_users(email=email_key(email1))
         response = user_query.fetch(1)
         user1 = response[0]
-        send_email(email2, user1.name)
+        send_email(email2, user1.name, email1, reasons)
     #we have a done schedj yeeeeeeeeeeeeee
 
 
