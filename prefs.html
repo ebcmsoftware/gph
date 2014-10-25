@@ -24,16 +24,16 @@ function getProcessingSketchId () { return 'timeselector'; }
 <body>
 <div class = "gphloginarea" id = "prefquizarea">
 	<form>
-		<h2>Time availability (*required)</h2>
-		<input type="checkbox" name="Sun" value="days" checked/>Sun
+	 	<h2>Time availability (*required)</h2>
+	<!--	<input type="checkbox" name="Sun" value="days" checked/>Sun
 		<input type="checkbox" name="Mon" value="days" checked/>Mon
 		<input type="checkbox" name="Tue" value="days" checked/>Tue
 		<input type="checkbox" name="Wed" value="days" checked/>Wed
 		<input type="checkbox" name="Thu" value="days" checked/>Thu
 		<input type="checkbox" name="Fri" value="days" checked/>Fri
-		<input type="checkbox" name="Sat" value="days" checked/>Sat<br>
-		<div id = "googbutton">Or import your google cal</div><br>
-		<h2 style = "clear: both"> or do this thing </h2>
+		<input type="checkbox" name="Sat" value="days" checked/>Sat<br> -->
+		<div id = "googbutton">Import your google cal</div><br>
+		<h2 style = "clear: both">Or fill in this calendar</h2>
 		<div id="content">
                                 <span width="50px" style="float:left" id="times">
                                 </span>
@@ -50,7 +50,8 @@ function getProcessingSketchId () { return 'timeselector'; }
 				</span>
 	    </div>
 	    <input id = "freeTimes" style = "display:none">
-		<h2>Coding preferences (optional)</h2>
+
+		<h2 style = "clear: both">Coding preferences (optional)</h2>
 		<h3>When during the day do you prefer working?</h3>
 		<input type="checkbox" name="variable" value="morning">Morning
 		<input type="checkbox" name="variable" value="afternoon">Afternoon
