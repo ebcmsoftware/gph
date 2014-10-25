@@ -1,6 +1,15 @@
 $(document).ready(function() {
 
-$('#submitbtn').click(function() {
+$('#submitlogin').click(function() {
+	post_params = {
+        name: $('#studentname').val(),
+        email: $('#studentemail').val(),
+    }
+    localStorage.set("email", post_params["email"]);
+    $.post('/adduser', post_params);
+});
+
+$('#submitprefs').click(function() {
     dayboxes = '';
     $('input').each(function(i, e) {
         if (e.type == 'checkbox') {
@@ -8,7 +17,15 @@ $('#submitbtn').click(function() {
         }
     });
     dayboxes = dayboxes.trim();
-    $.post('/adduser', dayboxes);
+    post_params = {
+    	email: localStorage.get("email");
+        free_days: dayboxes,
+    };
+    function success(data, textStatus, jqXHR) {
+        console.log(data);
+    }
+    $.post('/addprefs', post_params, success);
 });
+
 
 });
