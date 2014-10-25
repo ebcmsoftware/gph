@@ -69,4 +69,4 @@ class Schedule(object):
         results = {}
         for name in self.students:
             results[name] = self.best_matches_for(name)
-        return results
+        return sorted(results.items(), key=lambda x:x[1][0][1], reverse=True);

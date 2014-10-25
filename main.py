@@ -1,25 +1,38 @@
 import re
 import os
 import json
+#import gcal
 import random
 import urllib
+import urllib2
 import logging
 import webapp2
-import urllib2
+import datetime
 
-from datetime import datetime
+#from datetime import datetime
 from google.appengine.ext import ndb
 from google.appengine.api import mail
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp import template
 from google.appengine.ext.webapp.util import run_wsgi_app
 
+def name_key(name=''):
+  return ndb.Key('New Project', name)
+
 class Project(ndb.Model):
   start = ndb.DateTimeProperty()
   end = ndb.DateTimeProperty()
+  #name = ndb.StringProperty() 
+
+  @classmethod
+  def query_projects(self, name):
+    return self.query(ancestor=name)
+
+  @classmethod
+  def all_projects(self):
+    return self.query()
 
 def email_key(email=''):
-  #Constructs a Datastore key for a Guestbook entity with guestbook_name.
   return ndb.Key('New User', email)
 
 class User(ndb.Model):
@@ -51,13 +64,56 @@ def send_email(email=None, match=None):
             """ % (match))
     
 
+class GetProject(webapp2.RequestHandler):
+  def get(self):
+    projects = Project.all_projects()
+    response = projects.fetch(1)
+    if response == []: 
+        self.response.out.write('no there arent projects')
+        return
+    else:
+        project = response[0]
+    logging.info(project)
+    def to_utc(d):
+        import calendar
+        return calendar.timegm(d.timetuple())
+    self.response.out.write('%s\n%s\n%s' %(to_utc(project.start), to_utc(project.end), (project.end - project.start).days))
+    
+
+class FindMatches(webapp2.RequestHandler):
+  def post(self):
+    # send emails to erryone based on heuristic maximum funciton
+    # if odd number, :(
+    pass
+
+
 class CreateProject(webapp2.RequestHandler):
   def post(self):
-    self.response.out.write("cre8 a new proj here: (todo)")
-    pass
+    def parse(time):
+        return datetime.datetime.strptime(time, "%Y-%m-%d %H:%M")
+    start = self.request.get('startdate')
+    end = self.request.get('enddate')
+    logging.info(start)
+    start_time = parse(start)
+    logging.info(start_time)
+    end_time = parse(end)
+    projects = Project.all_projects()
+    response = projects.fetch(1)
+    if response == []: 
+        project = Project(parent=name_key('project'))
+        project.start = start_time
+        project.end = end_time
+    else:
+        project = response[0]
+        project.start = start_time
+        project.end = end_time
+    project.put()
     
   def get(self):
-    self.response.out.write("write a new proj here: (todo)")
+    path = os.path.join(os.path.dirname(__file__), 'admin.html')
+    template_values = {
+    }
+    self.response.out.write(template.render(path, template_values))
 
 
 class Callback(webapp2.RequestHandler):
@@ -66,7 +122,7 @@ class Callback(webapp2.RequestHandler):
     '''
     <script>
 token = location.hash.split('token=')[1].split('&')[0];
-window.location.href = 'http://group-40.appspot.com/getcals?token='+token;
+window.location.href = 'http://group-40.appspot.com/getbusytimes?token='+token;
 </script>
     ''')
 
@@ -80,11 +136,64 @@ window.location.href = 'http://group-40.appspot.com/getcals?token='+token;
     self.response.out.write(template.render(path, template_values))
     return
 
-class GetCals(webapp2.RequestHandler):
+class GetBusyTimes(webapp2.RequestHandler):
   def get(self):
     token = self.request.get('token')
-    self.response.out.write('here: ')
-    self.response.out.write(token)
+    timeMin = datetime.MINYEAR
+    timeMax = datetime.MAXYEAR
+
+    #data = dict([['access_token', token], ["timeMin", timeMin], ["timeMax",timeMax]])#, ["items", jsonTime(calendarIds)])
+    response = urllib2.urlopen('https://www.googleapis.com/calendar/v3/users/me/calendarList?access_token='+token)
+    response_text = response.read()
+    cal_data = json.loads(response_text)
+    calendarIds = []
+    for calendar_list_entry in cal_data['items']:
+        calendarIds.append({"id" : calendar_list_entry['id']})
+
+    projects = Project.all_projects()
+    response = projects.fetch(1)
+    project = response[0]
+    project.put()
+
+    def jsonTime(time):
+        return str(time).replace(" ", "T")+"Z"
+    
+    values = {
+        'page_token' : token,
+        'timeMin' : jsonTime(project.start),
+        'timeMax' : jsonTime(project.end),
+        'items' : calendarIds,
+    }
+    #logging.info(values)
+    interval_list = [] # list of tuples - (start, end)
+    def parse(time):
+        time = time.rsplit('-', 1)[0]
+        try:
+            return datetime.datetime.strptime(time, "%Y-%m-%dT%H:%M:%S")
+        except ValueError:
+            pass
+    for cal_id in calendarIds:
+        try:
+            response = urllib2.urlopen('https://www.googleapis.com/calendar/v3/calendars/'+cal_id['id']+'/events?access_token='+token+'&timeMin='+values['timeMin']+'&timeMax='+values['timeMax'])
+            response_text = response.read()
+        except urllib2.HTTPError:
+            continue
+        event_data = json.loads(response_text)
+        items = event_data['items']
+        for item in items:
+            try:
+                (a, b) = (item['start']['dateTime'], item['end']['dateTime'])
+                interval_list.append((parse(a), parse(b)))
+            except KeyError:
+                pass
+    #data = urllib.urlencode(values)
+    #data = str(values)
+    #logging.info(data)
+    #url = 'https://www.googleapis.com/calendar/v3/freeBusy'
+    #req = urllib2.Request(url, data)
+    #response = urllib2.urlopen(req)
+    #response_text = response.read()
+    #response = urllib2.urlopen('https://www.googleapis.com/calendar/v3/users/me/freeBusy?access_token='+token)
 
 class MainHandler(webapp2.RequestHandler):
   def get(self):
@@ -100,6 +209,7 @@ class AddUser(webapp2.RequestHandler):
     name = self.request.get('name')
     email = self.request.get('email')
     free_days = (self.request.get('free_days'))
+#if gmail then go to google cal selector else not
 #TODO: assert(email is valid)
     all_users = User.all_users()
     for user in all_users:
@@ -134,8 +244,10 @@ class AddUser(webapp2.RequestHandler):
     user.put()
 
 app = webapp2.WSGIApplication([
-    ('/getcals', GetCals),
+    ('/findmatches', FindMatches),
+    ('/getbusytimes', GetBusyTimes),
     ('/oauth2callback', Callback),
+    ('/getproject', GetProject),
     ('/createproject', CreateProject),
     ('/adduser', AddUser),
     ('/', MainHandler)

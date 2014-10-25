@@ -17,22 +17,15 @@ $('#submitlogin').click(function() {
     window.location.href = "prefs.html";
 });
 
-$('#submitlogin').click(function() {
+$('#submit40').click(function() {
 	post_params = {
         startdate: $('#sdate').val(),
         enddate: $('#edate').val(),
     }
-	$.post('/createproj', post_params);
+	$.post('/createproject', post_params, function(){alert("yey");});
 });
 
 $('#submitprefs').click(function() {
-    dayboxes = '';
-    $('input').each(function(i, e) {
-        if (e.type == 'checkbox') {
-            dayboxes += e.checked ? ' 1' : ' 0';
-        }
-    });
-    dayboxes = dayboxes.trim();
     post_params = {
     	email: localStorage["email"],
         free_times: $("#free_times").val(),
