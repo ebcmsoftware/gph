@@ -26,7 +26,8 @@ $('#submit40').click(function() {
 });
 
 $('#submitprefs').click(function() {
-	console.log("YO")
+	console.log("YO");
+	alert($("#freeTimes").html());
     post_params = {
     	email: localStorage.getItem("gphemail"),
         free_times: $("#freeTimes").val(),
@@ -39,7 +40,7 @@ $('#submitprefs').click(function() {
     function success(data, textStatus, jqXHR) {
         console.log(data);
     }
-    window.location.assign('success.html');
+    //window.location.assign('success.html');
     $.post('/addprefs', post_params, success);
 });
 
