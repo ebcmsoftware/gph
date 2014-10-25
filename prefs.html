@@ -35,8 +35,10 @@ function getProcessingSketchId () { return 'timeselector'; }
 		<div id = "googbutton">Or import your google cal</div><br>
 		<h2 style = "clear: both"> or do this thing </h2>
 		<div id="content">
-			<div width="700">
-                                <span id="dates"></span>
+                                <span width="50px" style="float:left" id="times">
+                                </span>
+                                <span width="700px">
+                                <div id="dates"></div>
 				<canvas id="timeselector" data-processing-sources="timeselector.pde" 
 						width="700" height="480">
 					<p>Your browser does not support the canvas tag.</p>
@@ -45,9 +47,9 @@ function getProcessingSketchId () { return 'timeselector'; }
 				<noscript>
 					<p>JavaScript is required to view the contents of this page.</p>
 				</noscript>
-	    	</div>
+				</span>
 	    </div>
-	    <input id = "processingMsg" style = "display:none">
+	    <input id = "freeTimes" style = "display:none">
 		<h2>Coding preferences (optional)</h2>
 		<h3>When during the day do you prefer working?</h3>
 		<input type="checkbox" name="variable" value="morning">Morning

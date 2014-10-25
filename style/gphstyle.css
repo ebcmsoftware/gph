@@ -7,7 +7,7 @@ body {
 .gphloginarea{
 	width: 80%;
 	height: 50%;
-	margin: 5% auto;
+	margin: 10% auto;
 }
 
 input {
@@ -32,4 +32,8 @@ input {
 	margin-bottom: 20px;
 	display: inline;
 	cursor: pointer;
+}
+
+.hour{
+    height:20px !IMPORTANT;
 }
