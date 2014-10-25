@@ -7,11 +7,11 @@ class Time{
   Time(){
   }
   void set(int x, int y){
-    day=floor(x/100);
+    day=floor(x*days/700);
     quarterHour=floor(y/5);
   }
   void setRelative(int x, int y, Time t){
-    day=floor(x/100);
+    day=floor(x*days/700);
     quarterHour=floor(y/5);
     if(quarterHour> t.quarterHour&&quarterHour<2+t.quarterHour)
       quarterHour=t.quarterHour+2;
@@ -31,13 +31,8 @@ ArrayList<Time> times;
 ArrayList<Integer> freeTimes;
 Time time1, time2;
 boolean pMousePressed;
-//var getStartDate(){
-//  return new Date();
-//}
-//var getEndDate(){
-//  return new Date();
-//}
-//var start, end;
+int days=7;
+long startTime;
 void setup(){
   size(700,480);
   background(230);
@@ -46,7 +41,9 @@ void setup(){
   fill(80,80,200);
   times=new ArrayList<Time>();
   freeTimes=new ArrayList<Integer>();
-  printMessage("hi!");
+  printMessage("");
+  //String s=loadStrings("http://group-40.appspot.com/getproject");
+  startTime=4;
 }
 void draw(){
   stroke(180);
