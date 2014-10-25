@@ -4,7 +4,6 @@ var printMessage =function(msg){
 
 var httpGet=function(theUrl)
 {
-    console.log("hey??");
     var xmlHttp = null;
 
     xmlHttp = new XMLHttpRequest();
@@ -12,14 +11,13 @@ var httpGet=function(theUrl)
     xmlHttp.send( null );
     return xmlHttp.responseText;
 };
-
+var dayNames=["Su","M","T","W","Th","F","S"];
 var generateDateDivs=function(timestamp, days){
     d=new Date();
     var s="";
     for(int i=0;i<days;i++){
         d.setTime(timestamp);
-        console.log(d);
-        s+="<span class='dateblock' style='float:left;width:"+700/days+"px'>"+(1+d.getMonth())+"/"+d.getDate()+"</span>";
+        s+="<span class='dateblock' style='float:left;width:"+700/days+"px'>"+dayNames[d.getDay()]+"</span>";
         timestamp+=86400000;
         
     }
@@ -75,8 +73,7 @@ void setup(){
   times=new ArrayList<Time>();
   freeTimes=new ArrayList<Integer>();
   printMessage("");
-  String[] s={"1413306840","1413825240","7"};
-  //String[] s=httpGet("http://group-40.appspot.com/getproject").split(' ');
+  String[] s=httpGet("http://group-40.appspot.com/getproject").split(' ');
   days=parseInt(s[2]);
   startTime=parseInt(s[0])*1000;
   generateDateDivs(startTime, days);
@@ -130,7 +127,7 @@ void drawTimes(){
     else
         x=t1.day*700/days-25;
     strokeWeight(2);
-    stroke(255,0,0);
+    stroke(220,80,100);
     line(x+4,y+4,x+16,y+16);
     line(x+16,y+4,x+4,y+16);
     strokeWeight(1);
