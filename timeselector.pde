@@ -1,7 +1,38 @@
 var printMessage =function(msg){
-    document.getElementById("processingMsg").innerHTML=msg;
+    document.getElementById("freeTimes").innerHTML=msg;
     };
 
+var httpGet=function(theUrl)
+{
+    console.log("hey??");
+    var xmlHttp = null;
+
+    xmlHttp = new XMLHttpRequest();
+    xmlHttp.open( "GET", theUrl, false );
+    xmlHttp.send( null );
+    return xmlHttp.responseText;
+};
+
+var generateDateDivs=function(timestamp, days){
+    d=new Date(timestamp);
+    d=new Date(d.getYear(), d.getMonth(), d.getDay(), 0, 0, 0);
+    timestamp=d.getTime();
+    var s="";
+    for(int i=0;i<days;i++){
+        d.setTime(timestamp);
+        s+="<span class='dateblock' style='float:left;width:"+700/days+"px'>"+d.getMonth()+"/"+d.getDay()+"</span>"
+    }
+    document.getElementById("dates").innerHTML=s;
+    };
+
+var putTimes=function(){
+    var s="<div style='height:10px'></div>";
+    for(int i=0;i<=24;i+=2){
+        s+="<div class='hour'>"+i+":00</div><div class='hour'>&nbsp;</div>";
+    }
+    document.getElementById("times").innerHTML=s;
+    };
+        
 class Time{
   int day, quarterHour;
   Time(){
@@ -31,8 +62,9 @@ ArrayList<Time> times;
 ArrayList<Integer> freeTimes;
 Time time1, time2;
 boolean pMousePressed;
-int days=7;
+int days=30;
 long startTime;
+
 void setup(){
   size(700,480);
   background(230);
@@ -42,13 +74,17 @@ void setup(){
   times=new ArrayList<Time>();
   freeTimes=new ArrayList<Integer>();
   printMessage("");
-  //String s=loadStrings("http://group-40.appspot.com/getproject");
-  startTime=4;
+  String[] s={"1413825240","1413825240","7"};
+  //String[] s=httpGet("http://group-40.appspot.com/getproject").split(' ');
+  days=parseInt(s[2]);
+  startTime=parseInt(s[0]);
+  generateDateDivs(startTime, days);
+  putTimes();;
 }
 void draw(){
   stroke(180);
   background(230);
-  for(int i=100;i<700;i+=100){
+  for(int i=0;i<700;i+=700/days){
     line(i,0,i,480);
   }
   for(int i=20;i<480;i+=20){
@@ -84,10 +120,10 @@ void drawTimes(){
   for(int i=0;i<times.size();i+=2){
     Time t1=times.get(i), t2=times.get(i+1);
     fill(80,80,200);
-    rect(t1.day*100, t1.quarterHour*5, (t2.day-t1.day+1)*100, t2.quarterHour*5-t1.quarterHour*5);
+    rect(t1.day*700/days, t1.quarterHour*5, (t2.day-t1.day+1)*700/days, t2.quarterHour*5-t1.quarterHour*5);
     //fill(255,0,0);
     int y=min(t1.quarterHour, t2.quarterHour)*5+5;
-    int x=max(t1.day, t2.day)*100+75;
+    int x=(max(t1.day, t2.day)+1)*700/days-25;
     strokeWeight(2);
     stroke(255,0,0);
     line(x+4,y+4,x+16,y+16);
@@ -105,7 +141,7 @@ void drawTimes(){
 
 void drawTime(Time t1, Time t2){
   fill(80,80,200);
-    rect(t1.day*100, t1.quarterHour*5, (t2.day-t1.day+1)*100, t2.quarterHour*5-t1.quarterHour*5);
+    rect(t1.day*700/days, t1.quarterHour*5, (t2.day-t1.day+1)*700/days, t2.quarterHour*5-t1.quarterHour*5);
 }
 
 void addTimes(){
@@ -126,7 +162,7 @@ void addTimes(){
 void refillMessage(){
     String s="";
     for(int i=0;i<freeTimes.size();i++){
-        s+=freeTimes.get(i)+" ";
+        s+=(long)freeTimes.get(i)+startTime+" ";
         }
     printMessage(s);
     }

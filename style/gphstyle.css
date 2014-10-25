@@ -34,4 +34,6 @@ input {
 	cursor: pointer;
 }
 
-.gphbutton
+.hour{
+    height:20px !IMPORTANT;
+}
