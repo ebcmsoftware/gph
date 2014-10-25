@@ -1,6 +1,24 @@
 from overlaps import *
 from intervaltree import *
 
+
+""" This class is meant to hold information about students' schudling preferences.
+    Each instance of a schedule class maintains a list of students, and a weighting
+    of preferences for students.
+    Each student is associated with a list of time intervals, representing when they
+    are free.  They may also have:
+        - A dictionary of preferences.  When users have the same value set for a
+          particular preference, the weight of that preference will be added to
+          their score.
+        - A list of tuples listing preferences for times of day.  Each tuple has
+          the form (start, end, weight), meaning that a time period that begins
+          between start and end will be weighted by the given value
+    Finally, for a student, you can search the best matches for that student,
+    which determines a particular score between that student and each other.
+    The score is based on total overlapping free time (with preference given for
+    longer amounts of consecutive time), how much of that free time is a preferred
+    time for the student, and how many of their preferences are shared.
+"""
 class Schedule(object):
     def __init__(self, preferences={}):
         self.tree = IntervalTree()
@@ -23,15 +41,15 @@ class Schedule(object):
         if name not in self.students:
             self.students[name] = {}
 
-    def add_student(self, name, time_list, preferences={}):
-        self.students[name] = {}
+    def add_student(self, name, time_list, preferences={}, time_weights=[]):
+        self.students[name] = ({}, time_weights)
         for category in preferences:
-            self.students[name][category] = preferences[category]
+            self.students[name][0][category] = preferences[category]
         for interval in time_list:
             self.add_interval(name, interval[0], interval[1])
 
     def best_matches_for(self, student):
-        times = best_partners(self.tree, student)
+        times = best_partners(self.tree, student, self.students[student][1])
         best_times = [i for i in times if i[0] != student];
         if not best_times or "time" not in self.preferences:
             return best_times
@@ -42,7 +60,13 @@ class Schedule(object):
             name = tup[0]
             score = (tup[1] / highest) * time_weight
             for pref in self.preferences:
-                if pref in self.students[student] and pref in self.students[name] and self.students[student][pref] == self.students[name][pref]:
+                if pref in self.students[student][0] and pref in self.students[name][0] and self.students[student][0][pref] == self.students[name][0][pref]:
                     score += self.preference_weight(pref)
             result.append((name, score));
         return sorted(result, key=lambda x: x[1], reverse=True)
+
+    def get_all_best_matches(self):
+        results = {}
+        for name in self.students:
+            results[name] = self.best_matches_for(name)
+        return results

@@ -24,19 +24,21 @@ function getProcessingSketchId () { return 'timeselector'; }
 <body>
 <div class = "gphloginarea" id = "prefquizarea">
 	<form>
-		<h2>Time availability (*required)</h2>
-		<input type="checkbox" name="Sun" value="days" checked/>Sun
+	 	<h2>Time availability (*required)</h2>
+	<!--	<input type="checkbox" name="Sun" value="days" checked/>Sun
 		<input type="checkbox" name="Mon" value="days" checked/>Mon
 		<input type="checkbox" name="Tue" value="days" checked/>Tue
 		<input type="checkbox" name="Wed" value="days" checked/>Wed
 		<input type="checkbox" name="Thu" value="days" checked/>Thu
 		<input type="checkbox" name="Fri" value="days" checked/>Fri
-		<input type="checkbox" name="Sat" value="days" checked/>Sat<br>
-		<div id = "googbutton">Or import your google cal</div><br>
-		<h2> or do this thing </h2>
+		<input type="checkbox" name="Sat" value="days" checked/>Sat<br> -->
+		<div id = "googbutton">Import your google cal</div><br>
+		<h2 style = "clear: both">Or fill in this calendar</h2>
 		<div id="content">
-			<div width="700">
-                                <span id="dates"></span>
+                                <span width="50px" style="float:left" id="times">
+                                </span>
+                                <span width="700px">
+                                <div id="dates"></div>
 				<canvas id="timeselector" data-processing-sources="timeselector.pde" 
 						width="700" height="480">
 					<p>Your browser does not support the canvas tag.</p>
@@ -45,9 +47,10 @@ function getProcessingSketchId () { return 'timeselector'; }
 				<noscript>
 					<p>JavaScript is required to view the contents of this page.</p>
 				</noscript>
-	    	</div>
+				</span>
 	    </div>
-	    <input id = "processingMsg" style = "display:none">
+	    <span id = "freeTimes" style="display:none"></span>
+
 		<h2 style = "clear: both">Coding preferences (optional)</h2>
 		<h3>When during the day do you prefer working?</h3>
 		<input type="checkbox" name="variable" value="morning">Morning
@@ -59,8 +62,7 @@ function getProcessingSketchId () { return 'timeselector'; }
 		<h3>Do you prefer typing or your partner typing?</h3>
 		<input type="radio" name="variable" value="metype">Me<br>
 		<input type="radio" name="variable" value="partnerty">Partner<br>
-		<input type="button" value="Submit" id="submitbtn"><br>
-
+		
 		<h3>What text editor do you use?</h3>
 		<input type="radio" name="texteditor" value="vim">Vim<br>
 		<input type="radio" name="texteditor" value="sublime">Sublime<br>
@@ -71,6 +73,7 @@ function getProcessingSketchId () { return 'timeselector'; }
 		<h3>Camel case or underscores?</h3>
 		<input type="radio" name="variable" value="camel">Camel Case<br>
 		<input type="radio" name="variable" value="underscore">Underscores<br>
+		<input type="button" value="Submit" id="submitbtn"><br><br>
 
 	</form>
 </div>
