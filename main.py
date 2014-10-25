@@ -38,10 +38,10 @@ class MainHandler(webapp2.RequestHandler):
                            to=email,
                            subject="We've found you a project match!!",
                            body=
-            """weve matched u with some1
+                """weve matched u with some1
 
-            this is their email address: %s
-            """ % (match))
+                this is their email address: %s
+                """ % (match))
     
 
     def get(self):
@@ -54,9 +54,34 @@ class MainHandler(webapp2.RequestHandler):
         return
 
 class AddUser(webapp2.RequestHandler):
-    def post(self):
-        logging.debug(self.request)
-        self.response.write('ohohohohohohohoh')
+  def post(self):
+    logging.debug(self.request)
+    greetings_query = Room.query_book(ancestor_key=guestbook_key(roomkey))
+    response = greetings_query.fetch(1)
+    if response == []:
+        if roomkey == DEFAULT_ROOMKEY:
+            path = os.path.join(os.path.dirname(__file__), '../knoknok/index.html')
+            self.response.out.write(template.render(path, {}))
+            return
+        room = Room(parent=guestbook_key(roomkey))
+        room.roomkey = roomkey
+        room.alive = False #this happened because they had information in their cache that didn't exist :|
+        room.put()
+        logging.info("redirecting to error")
+#This should only happen in the case that a roommate deletes your room. Or we manage to fully delete their room's datastore entry.
+        self.response.out.write("<script>clearCookies(true);</script>") #1 line 3 programming languages
+        self.redirect("/")
+        return
+    else:
+        room = response[0]
+        logging.info(response)
+        if room.roomkey != DEFAULT_ROOMKEY and not room.alive:
+            logging.info("exited due to deleted room! roomkey " + str(roomkey) + " was deleted")
+            path = os.path.join(os.path.dirname(__file__), '../knoknok/index.html')
+            self.response.out.write(template.render(path, {}))
+            self.redirect("/error")
+            return
+    self.response.write('ohohohohohohohoh')
 
 app = webapp2.WSGIApplication([
     ('/adduser', AddUser),
