@@ -81,6 +81,8 @@ class Schedule(object):
         results = {}
         for name in self.students:
             results[name] = self.best_matches_for(name)
+            if not results[name]:
+                del results[name]
         def get_score(x):
             matches = x[1]
             best = matches[0]
