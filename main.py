@@ -280,14 +280,23 @@ class GetBusyTimes(webapp2.RequestHandler):
     user = response[0]
     user.busy_times = interval_list
     user.put()
-    self.redirect('/prefs')
+    self.redirect('/prefs?submitted=1')
 
 
 class Prefs(webapp2.RequestHandler):
   def get(self):
+    submitted_cal = self.request.get('submitted', '0')
+    submitted_cal = submitted_cal == '1'
+    logging.info(self.request)
+    logging.info(self.request.get('submitted'))
+    logging.info(submitted_cal)
+    logging.info(self.request)
+    logging.info(self.request.get('submitted'))
+    logging.info(submitted_cal)
     # pair people with other people
     path = os.path.join(os.path.dirname(__file__), 'prefs.html')
     template_values = {
+            'submitted_cal' : submitted_cal
     }
     self.response.out.write(template.render(path, template_values))
     return

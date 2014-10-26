@@ -24,33 +24,41 @@ function getProcessingSketchId () { return 'timeselector'; }
 <body>
 <div class = "gphloginarea" id = "prefquizarea">
 	<form>
-	 	<h2>Time availability (*required)</h2>
-	<!--	<input type="checkbox" name="Sun" value="days" checked/>Sun
-		<input type="checkbox" name="Mon" value="days" checked/>Mon
-		<input type="checkbox" name="Tue" value="days" checked/>Tue
-		<input type="checkbox" name="Wed" value="days" checked/>Wed
-		<input type="checkbox" name="Thu" value="days" checked/>Thu
-		<input type="checkbox" name="Fri" value="days" checked/>Fri
-		<input type="checkbox" name="Sat" value="days" checked/>Sat<br> -->
-		<div id = "googbutton">Import your google cal</div><br>
-		<h2 style = "clear: both">Or fill in this calendar with times you're free</h2>
-		<div id="content">
-                                <span width="50px" style="float:left" id="times">
-                                </span>
-                                <span width="700px">
-                                <div id="dates"></div>
-				<canvas id="timeselector" data-processing-sources="scripts/timeselector.pde" 
-						width="700" height="480">
-					<p>Your browser does not support the canvas tag.</p>
-					<!-- Note: you can put any alternative content here. -->
-				</canvas>
-				<noscript>
-					<p>JavaScript is required to view the contents of this page.</p>
-				</noscript>
-				</span>
-	    </div>
+        {# Jinja template stuff #}
+        {% if submitted_cal %}
+            <h1> Successfully submitted calendar info! <br>
+                Please enter more below to find an even better match:
+            </h1>
+        {% else %}
+            <h2>Time availability (*required)</h2>
+            <!--	
+            <input type="checkbox" name="Sun" value="days" checked/>Sun
+            <input type="checkbox" name="Mon" value="days" checked/>Mon
+            <input type="checkbox" name="Tue" value="days" checked/>Tue
+            <input type="checkbox" name="Wed" value="days" checked/>Wed
+            <input type="checkbox" name="Thu" value="days" checked/>Thu
+            <input type="checkbox" name="Fri" value="days" checked/>Fri
+            <input type="checkbox" name="Sat" value="days" checked/>Sat<br> 
+            -->
+            <div id="googbutton">Import your google calendar</div><br>
+            <h2 style = "clear: both">Or fill in this calendar with times you're free</h2>
+            <div id="content">
+                                    <span width="50px" style="float:left" id="times">
+                                    </span>
+                                    <span width="700px">
+                                    <div id="dates"></div>
+                    <canvas id="timeselector" data-processing-sources="scripts/timeselector.pde" 
+                            width="700" height="480">
+                        <p>Your browser does not support the canvas tag.</p>
+                    </canvas>
+                    <noscript>
+                        <p>JavaScript is required to view the contents of this page.</p>
+                    </noscript>
+                    </span>
+            </div>
 
-	    <span id = "freeTimes" style="display:none"></span>
+            <span id = "freeTimes" style="display:none"></span>
+        {% endif %}
 
 		<h2 style = "clear: both">Coding preferences (optional)</h2>
 		<h3>What year are you?</h3>
