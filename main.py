@@ -53,17 +53,19 @@ class User(ndb.Model):
   def all_users(self):
     return self.query()
 
+
 def send_email(email=None, match_name=None, match_email=None, reasons=None):
+    return
     if email not in ("", None) and match_name not in ("", None) and match_email not in ('', None):
         bod = """We've matched you with %s for the following reasons:
               """ % (match_name)
         for r in reasons:
             bod += r + """ {0}
                         """.format(reasons[r])
-            bod += """
-            this is their email address: %s
-            """ % match_email
-        mail.send_mail(sender="the <x> team (change this) <popcorncolonel@gmail.com>",
+        bod += """
+        this is their email address: %s
+        """ % match_email
+        mail.send_mail(sender="The Group40 Team <popcorncolonel@gmail.com>",
                        to=email,
                        subject="We've found you a project partner!",
                        body= bod)
