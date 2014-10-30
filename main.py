@@ -343,7 +343,7 @@ class AddUser(webapp2.RequestHandler):
     try:
         (x, site) = email.split('@')
         machine = site.split('.')[1]
-    except IndexError:
+    except IndexError, ValueError:
         self.redirect('/')
         return
     user_query = User.query_users(email=email_key(email))
