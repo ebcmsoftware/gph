@@ -1,20 +1,25 @@
 $(document).ready(function() {
 
 var CLIENT_ID = "887830103143-ptqtmjls6qvpgjdiv94h5g4oogd0230i.apps.googleusercontent.com"
-/* CLIENT_ID = "887830103143-ptqtmjls6qvpgjdiv94h5g4oogd0230i.apps.googleusercontent.com"
-    ClIENT_SECRET = "UQSES1KIMG_rmkPaqzpRUOcu"
-
-    DEVELOPER_KEY = "AIzaSyBaZkVov0QHnKAmpjBV4Bl51FYtzDDFSJ4"
-*/
 
 $('#submitlogin').click(function() {
+    var email = $('#studentemail').val() 
+    var name = $('#studentname').val(),
 	post_params = {
-        name: $('#studentname').val(),
-        email: $('#studentemail').val(),
+        name: name,
+        email: email,
     }
-    localStorage.setItem("gphemail", $('#studentemail').val());
-    $.post('/adduser', post_params);
-    window.location.href = "/prefs";
+    localStorage.setItem("gphemail", email);
+    if (name == '') {
+        alert("Please enter your name.");
+        return;
+    }
+    if (email.match(/\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b/gi) != null) {
+        $.post('/adduser', post_params);
+        window.location.href = "/prefs";
+    } else {
+        alert("That's not an email address.");
+    }
 });
 
 $('#submit40').click(function() {
